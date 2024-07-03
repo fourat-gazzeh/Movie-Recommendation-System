@@ -1,4 +1,4 @@
-// Header.js
+// src/components/Header.js
 import React, { useRef, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './header.scss';
@@ -25,7 +25,7 @@ const Header = () => {
             } else {
                 headerRef.current.classList.remove('shrink');
             }
-        }
+        };
         window.addEventListener('scroll', shrinkHeader);
         return () => {
             window.removeEventListener('scroll', shrinkHeader);
@@ -34,14 +34,6 @@ const Header = () => {
 
     const toggleModal = () => {
         setShowModal(!showModal);
-    };
-
-    const scrollToTopAndNavigate = (path) => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        // Add a slight delay to ensure the scroll completes before navigating
-        setTimeout(() => {
-            window.location.href = path;
-        }, 300);
     };
 
     return (
@@ -55,21 +47,25 @@ const Header = () => {
                     <ul className="header__nav">
                         {headerNav.map((e, i) => (
                             <li key={i} className={`${i === active ? 'active' : ''}`}>
-                                <a href={e.path} onClick={(event) => {
-                                    event.preventDefault();
-                                    scrollToTopAndNavigate(e.path);
-                                }}>{e.display}</a>
+                                <Link to={e.path} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                                    {e.display}
+                                </Link>
                             </li>
                         ))}
                     </ul>
-                    <button className="sign-in-button" onClick={toggleModal}>
-                        Sign In
-                    </button>
+                    <div className="header__buttons">
+                        <button className="sign-in-button" onClick={toggleModal}>
+                            Sign In
+                        </button>
+                        <Link to="/profile" className="profile-button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                            Profile
+                        </Link>
+                    </div>
                 </div>
             </div>
             {showModal && <SignInModal toggleModal={toggleModal} />}
         </>
     );
-}
+};
 
 export default Header;
